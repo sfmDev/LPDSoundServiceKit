@@ -22,7 +22,7 @@ pod 'LPDSoundServiceKit'
 
 ## Author
 
-sfmdeveloper@icloud.com, fengming.shi@ele.me
+sfmdeveloper@icloud.com
 
 ## License
 

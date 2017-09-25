@@ -362,6 +362,7 @@
 		7DBC99EC97119586A6C675201407934D /* RACKVOTrampoline.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACKVOTrampoline.h; path = ReactiveObjC/RACKVOTrampoline.h; sourceTree = "<group>"; };
 		7EBE51957DCEE65C56381A28A21C1D01 /* RACBehaviorSubject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACBehaviorSubject.m; path = ReactiveObjC/RACBehaviorSubject.m; sourceTree = "<group>"; };
 		80019EE4A9350FE2D28BE7D8D471C298 /* NSIndexSet+RACSequenceAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSIndexSet+RACSequenceAdditions.m"; path = "ReactiveObjC/NSIndexSet+RACSequenceAdditions.m"; sourceTree = "<group>"; };
+		8243288B1F78BC89002B771F /* LPDSoundServiceKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LPDSoundServiceKit.h; path = LPDSoundServiceKit/Classes/LPDSoundServiceKit.h; sourceTree = "<group>"; };
 		8282CB934720CDFACB2461B3F502D426 /* RACSignalProvider.d */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.dtrace; name = RACSignalProvider.d; path = ReactiveObjC/RACSignalProvider.d; sourceTree = "<group>"; };
 		831E9A67A99A7A8FE263DB9925814FBB /* RACAnnotations.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACAnnotations.h; path = ReactiveObjC/RACAnnotations.h; sourceTree = "<group>"; };
 		832F65AA7357990AB2654E82CE3637BE /* RACDynamicSequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACDynamicSequence.m; path = ReactiveObjC/RACDynamicSequence.m; sourceTree = "<group>"; };
@@ -769,6 +770,7 @@
 		9828356F77EB41A3E01EDC961D8C0D59 /* LPDSoundServiceKit */ = {
 			isa = PBXGroup;
 			children = (
+				8243288B1F78BC89002B771F /* LPDSoundServiceKit.h */,
 				329E482886C19A678564E180DC199DA8 /* LPDSoundService.h */,
 				D42E99B4540324DDB121E6EE2ECE4919 /* LPDSoundService.m */,
 				4355D8E9DC02CEB8AFAC3167BDEB939C /* LPDTeleponyManager.h */,

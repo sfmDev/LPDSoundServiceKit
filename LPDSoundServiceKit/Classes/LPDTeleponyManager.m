@@ -10,7 +10,6 @@
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
 #import <CallKit/CXCallObserver.h>
-#import "ReactiveObjC.h"
 
 #define CurrentSystemVersion ([[[UIDevice currentDevice] systemVersion] floatValue])
 #define IS_OS_10_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0)

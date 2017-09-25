@@ -5,4 +5,5 @@ use_frameworks!
 target 'LPDSoundServiceKit_Example' do
   pod 'LPDSoundServiceKit', :path => '../'
   pod 'ReactiveObjC'
+  pod 'LPDControlsKit'
 end

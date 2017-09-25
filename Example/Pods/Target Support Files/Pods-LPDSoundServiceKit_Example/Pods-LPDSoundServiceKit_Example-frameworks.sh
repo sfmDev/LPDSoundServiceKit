@@ -102,12 +102,20 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/LPDAdditionsKit/LPDAdditionsKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/LPDControlsKit/LPDControlsKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LPDSoundServiceKit/LPDSoundServiceKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SDVersion/SDVersion.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/LPDAdditionsKit/LPDAdditionsKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/LPDControlsKit/LPDControlsKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LPDSoundServiceKit/LPDSoundServiceKit.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/ReactiveObjC/ReactiveObjC.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/SDVersion/SDVersion.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

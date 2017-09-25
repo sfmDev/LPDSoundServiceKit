@@ -38,4 +38,5 @@ TODO: Add long description of the pod here.
 
   s.frameworks = 'UIKit', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'CoreTelephony', 'CallKit'
   s.dependency 'ReactiveObjC'
+  s.dependency 'LPDControlsKit'
 end

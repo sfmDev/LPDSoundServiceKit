@@ -11,6 +11,7 @@
 #endif
 
 #import "LPDSoundService.h"
+#import "LPDSoundServiceKit.h"
 #import "LPDTeleponyManager.h"
 #import "LPDVolumeManager.h"
 

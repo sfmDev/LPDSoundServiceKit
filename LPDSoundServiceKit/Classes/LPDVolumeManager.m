@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import "LPDSoundService.h"
+#import <LPDControlsKit/LPDToastView.h>
 
 @interface LPDVolumeManager()
 
@@ -63,10 +64,10 @@
 
     switch (routeChangeReason) {
         case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-            // 进入耳机模式
+            [LPDToastView show:@"进入耳机模式"];
             break;
         case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-            // 退出耳机模式
+            [LPDToastView show:@"退出耳机模式"];
             break;
         default:
             break;

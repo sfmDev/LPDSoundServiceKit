@@ -19,8 +19,19 @@
     "ios": "8.0"
   },
   "source_files": "LPDSoundServiceKit/Classes/**/*",
+  "frameworks": [
+    "UIKit",
+    "AudioToolbox",
+    "AVFoundation",
+    "MediaPlayer",
+    "CoreTelephony",
+    "CallKit"
+  ],
   "dependencies": {
     "ReactiveObjC": [
+
+    ],
+    "LPDControlsKit": [
 
     ]
   }

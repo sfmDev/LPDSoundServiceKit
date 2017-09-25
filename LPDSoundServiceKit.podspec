@@ -36,7 +36,6 @@ TODO: Add long description of the pod here.
   #   'LPDSoundServiceKit' => ['LPDSoundServiceKit/Assets/*.png']
   # }
 
-  s.public_header_files = 'Pod/Classes/LPDSoundServiceKit.h'
   s.frameworks = 'UIKit', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'CoreTelephony', 'CallKit'
   s.dependency 'ReactiveObjC'
 end

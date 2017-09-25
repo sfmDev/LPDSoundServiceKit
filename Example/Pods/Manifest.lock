@@ -1,0 +1,20 @@
+PODS:
+  - LPDSoundServiceKit (0.1.0):
+    - ReactiveObjC
+  - ReactiveObjC (3.0.0)
+
+DEPENDENCIES:
+  - LPDSoundServiceKit (from `../`)
+  - ReactiveObjC
+
+EXTERNAL SOURCES:
+  LPDSoundServiceKit:
+    :path: ../
+
+SPEC CHECKSUMS:
+  LPDSoundServiceKit: d75791fd9be989d1a5f86c7042b952d4917b6603
+  ReactiveObjC: ce79989e8684b9086b5f8d0c74bc7b81a8729c9e
+
+PODFILE CHECKSUM: d2e384d7a03791106e34d0552074c77350379563
+
+COCOAPODS: 1.3.1

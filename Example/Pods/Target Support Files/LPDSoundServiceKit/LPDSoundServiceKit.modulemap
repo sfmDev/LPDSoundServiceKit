@@ -1,0 +1,6 @@
+framework module LPDSoundServiceKit {
+  umbrella header "LPDSoundServiceKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

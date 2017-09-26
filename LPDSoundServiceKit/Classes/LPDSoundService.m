@@ -82,12 +82,11 @@
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:soundName ofType:type]];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
-    self.audioPlayer.numberOfLoops = 0;
     self.audioPlayer.delegate = self;
     [self setAudioPlayerVolume];
     [self.audioPlayer prepareToPlay];
-    [self.audioPlayer play];
     [self shakeWhenPlaying];
+    [self.audioPlayer play];
 }
 
 // 控制扬声器输出还是默认
@@ -122,6 +121,8 @@
 //播放完成回调
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
     if (flag && self.audioPlayer == player) {
+        [self.audioPlayer stop];
+        self.audioPlayer = nil;
         [[AVAudioSession sharedInstance] setActive:NO
                                        withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
                                              error:nil];
@@ -184,3 +185,4 @@
 }
 
 @end
+

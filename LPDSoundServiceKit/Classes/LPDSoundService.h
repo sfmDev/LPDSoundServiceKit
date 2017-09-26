@@ -14,6 +14,7 @@
 + (instancetype)sharedInstance;
 
 @property (nonatomic, strong) AVAudioPlayer *audioPlayer;
+@property (nonatomic, assign) BOOL canShake;
 
 /**
  *  @brief play sound with file name. e.m sound.aiff
@@ -26,5 +27,10 @@
  */
 
 - (void)setAudioPlayerVolume;
+
+/**
+ *  @brief control the shake when play the sound
+ */
+- (void)openShake:(BOOL)canshake;
 
 @end

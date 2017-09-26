@@ -31,7 +31,6 @@
 @property (nonatomic, strong) NSString *cacheSoundType;
 @property (nonatomic, strong) NSMutableArray<NSString *> *cacheSounds;
 @property (nonatomic, assign) BOOL isPlaying;
-@property (nonatomic, assign) BOOL canShake;
 
 @end
 

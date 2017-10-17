@@ -33,4 +33,10 @@
  */
 - (void)openShake:(BOOL)canshake;
 
+/**
+ *  @brief control the cache sound
+ */
+- (void)needCache:(BOOL)isNeed;
+
 @end
+

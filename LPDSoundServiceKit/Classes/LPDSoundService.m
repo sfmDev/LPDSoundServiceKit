@@ -31,6 +31,7 @@
 @property (nonatomic, strong) NSString *cacheSoundType;
 @property (nonatomic, strong) NSMutableArray<NSString *> *cacheSounds;
 @property (nonatomic, assign) BOOL isPlaying;
+@property (nonatomic, assign) BOOL needCache;
 
 @end
 
@@ -50,6 +51,7 @@
     if (self) {
         self.cacheSounds = [NSMutableArray array];
         self.canShake = YES;
+        self.needCache = YES;
         [self setupNotifications];
         [[[LPDTeleponyManager sharedInstance] teleponyStateSignal] subscribeCompleted:^{
             [self playCacheSound];
@@ -61,17 +63,22 @@
 - (void)playSoundWithName:(NSString *)soundName ofType:(NSString*)type {
     if ([[LPDTeleponyManager sharedInstance] isConnected]) {
         [self shakeWhenPlaying];
-        self.cacheSoundType = type;
-        [self.cacheSounds addObject:soundName];
-        return;
+        if (self.needCache == YES) {
+            self.cacheSoundType = type;
+            [self.cacheSounds addObject:soundName];
+            return;
+        }
     }
     if (self.isPlaying == YES) {
-        self.cacheSoundType = type;
-        [self.cacheSounds addObject:soundName];
+        if (self.needCache == YES) {
+            self.cacheSoundType = type;
+            [self.cacheSounds addObject:soundName];
+        }
         return;
     }
-
-    self.isPlaying = YES;
+    if (self.needCache == YES) {
+        self.isPlaying = YES;
+    }
 
     AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
@@ -137,6 +144,10 @@
 
 - (void)openShake:(BOOL)canshake {
     self.canShake = canshake;
+}
+
+- (void)needCache:(BOOL)isNeed {
+    self.needCache = isNeed;
 }
 
 - (void)playCacheSound {

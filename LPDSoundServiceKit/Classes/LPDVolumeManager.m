@@ -64,10 +64,14 @@
 
     switch (routeChangeReason) {
         case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-            [LPDToastView show:@"进入耳机模式"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [LPDToastView show:@"进入耳机模式"];
+            });
             break;
         case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-            [LPDToastView show:@"退出耳机模式"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [LPDToastView show:@"退出耳机模式"];
+            });
             break;
         default:
             break;

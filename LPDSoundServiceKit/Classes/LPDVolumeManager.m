@@ -81,8 +81,17 @@
 - (BOOL)isHeadsetPluggedIn {
     AVAudioSessionRouteDescription* route = [[AVAudioSession sharedInstance] currentRoute];
     for (AVAudioSessionPortDescription* desc in [route outputs]) {
-        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones])
+        if ([[desc portType] isEqualToString:AVAudioSessionPortHeadphones]) {
             return YES;
+        } else if ([[desc portType] isEqualToString:AVAudioSessionPortBluetoothLE]) {
+            return YES;
+        } else if ([[desc portType] isEqualToString:AVAudioSessionPortBluetoothA2DP]) {
+            return YES;
+        } else if ([[desc portType] isEqualToString:AVAudioSessionPortBluetoothHFP]) {
+            return YES;
+        } else if ([[desc portType] isEqualToString:AVAudioSessionPortAirPlay]) {
+            return YES;
+        }
     }
     return NO;
 }

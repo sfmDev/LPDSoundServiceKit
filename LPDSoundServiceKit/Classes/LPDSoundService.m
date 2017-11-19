@@ -10,7 +10,6 @@
 #import <UIKit/UIKit.h>
 #import "LPDSoundService.h"
 #import "LPDVolumeManager.h"
-#import "LPDTeleponyManager.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface LPDSoundItem : NSObject
@@ -51,42 +50,21 @@
     if (self) {
         self.cacheSounds = [NSMutableArray array];
         self.canShake = YES;
-        self.needCache = YES;
+        self.needCache = NO;
         [self setupNotifications];
-        [[[LPDTeleponyManager sharedInstance] teleponyStateSignal] subscribeCompleted:^{
-            [self playCacheSound];
-        }];
     }
     return self;
 }
 
 - (void)playSoundWithName:(NSString *)soundName ofType:(NSString*)type {
-    if ([[LPDTeleponyManager sharedInstance] isConnected]) {
-        [self shakeWhenPlaying];
-        if (self.needCache == YES) {
-            self.cacheSoundType = type;
-            [self.cacheSounds addObject:soundName];
-            return;
-        }
-    }
-    if (self.isPlaying == YES) {
-        if (self.needCache == YES) {
-            self.cacheSoundType = type;
-            [self.cacheSounds addObject:soundName];
-        }
-        return;
-    }
-    if (self.needCache == YES) {
-        self.isPlaying = YES;
-    }
-
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
-    [self setOutputWith:session];
-
-    [session setActive:YES error:nil];
     //让app支持接受远程控制事件
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+    [self setOutputWith:session];
+    [session setActive:YES error:nil];
+
     NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:soundName ofType:type]];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
     self.audioPlayer.delegate = self;

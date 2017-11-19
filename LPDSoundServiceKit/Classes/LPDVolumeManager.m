@@ -100,11 +100,6 @@
     return [AVAudioSession sharedInstance].outputVolume;
 }
 
-- (float)setSystemVolumeToMax {
-    [self setVolumeValue: 1.0];
-    return 1.0;
-}
-
 - (void)removeMPVolumeView {
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     for (UIView *subView in window.subviews) {
@@ -120,7 +115,6 @@
     for (UIView *view in [self.mpVolumeView subviews]){
         if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
             self.slider = (UISlider*)view;
-            self.slider.hidden = YES;
             break;
         }
     }
@@ -158,13 +152,16 @@
     if (!self.slider) {
         [self generateMPVolumeSlider];
     }
-    return self.slider.value;
+    if (_volumeValue == 0) {
+         return [self getCurrentVolume];
+    } else {
+        return self.slider.value;
+    }
 }
 
 -(MPVolumeView *) mpVolumeView {
     if (!_mpVolumeView) {
-        _mpVolumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(0, 50, 100, 100)];
-        _mpVolumeView.hidden = YES;
+        _mpVolumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(-100, -100, 100, 100)];
     }
     return _mpVolumeView;
 }

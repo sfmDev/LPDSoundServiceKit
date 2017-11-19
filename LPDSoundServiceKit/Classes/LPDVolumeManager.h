@@ -21,8 +21,6 @@
 - (BOOL)isHeadsetPluggedIn;
 // 当前音量
 - (float)getCurrentVolume;
-// 设置当前音量为做大
-- (float)setSystemVolumeToMax;
 // 移除 MPVolumeView
 - (void)removeMPVolumeView;
 

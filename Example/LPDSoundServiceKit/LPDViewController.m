@@ -7,7 +7,7 @@
 //
 
 #import "LPDViewController.h"
-#import "LPDSoundService.h"
+#import <LPDSoundServiceKit/LPDSoundServiceKit.h>
 
 @interface LPDViewController ()
 

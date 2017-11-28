@@ -10,15 +10,15 @@
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
 #import <CallKit/CXCallObserver.h>
+#import <CallKit/CXCall.h>
 
 #define CurrentSystemVersion ([[[UIDevice currentDevice] systemVersion] floatValue])
-#define IS_OS_10_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0)
 
-@interface LPDTeleponyManager()
+@interface LPDTeleponyManager() <CXCallObserverDelegate>
 
-@property(nonatomic, strong) dispatch_source_t scanTimer;
 @property (nonatomic, strong) CXCallObserver *cXCallObserver;
 @property (nonatomic, strong) CTCallCenter *callCenter;
+@property (nonatomic, assign) BOOL currentCallState;
 
 @end
 
@@ -36,9 +36,9 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.teleponyStateSignal = [RACReplaySubject replaySubjectWithCapacity: 1];
-        if (CurrentSystemVersion > 10.0) {
+        if (CurrentSystemVersion >= 10.0) {
             _cXCallObserver = [[CXCallObserver alloc] init];
+            [_cXCallObserver setDelegate:self queue:nil];
         } else {
             _callCenter = [[CTCallCenter alloc] init];
         }
@@ -46,40 +46,20 @@
     return self;
 }
 
-- (BOOL)isConnected {
-    if (CurrentSystemVersion >= 10.0) {
-        if (self.cXCallObserver.calls.count == 0) {
-            return NO;
-        } else {
-            [self setTimeout];
-            return YES;
-        }
-    } else {
-        if (self.callCenter.currentCalls.count == 0) {
-            return NO;
-        } else {
-            [self setTimeout];
-            return YES;
-        }
+- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call {
+    if ([call hasConnected]) {
+        self.currentCallState = YES;
+    }
+    if ([call hasEnded]) {
+        self.currentCallState = NO;
     }
 }
 
-- (void)setTimeout {
-    dispatch_queue_t quene = dispatch_get_main_queue();
-    self.scanTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, quene);
-    dispatch_source_set_timer(self.scanTimer, DISPATCH_TIME_NOW, 0, 0);
-    dispatch_source_set_event_handler(self.scanTimer, ^{
-        [self createStateSignal];
-    });
-    dispatch_resume(self.scanTimer);
-}
-
-- (void)createStateSignal {
-    if ([self isConnected]) {
-        //        [(RACSubject *)self.teleponyStateSignal sendNext: @"Connected"];
+- (BOOL)isConnected {
+    if (CurrentSystemVersion >= 10.0) {
+        return self.currentCallState;
     } else {
-        dispatch_source_cancel(self.scanTimer);
-        [(RACSubject *)self.teleponyStateSignal sendCompleted];
+        return self.callCenter.currentCalls.count != 0;
     }
 }
 

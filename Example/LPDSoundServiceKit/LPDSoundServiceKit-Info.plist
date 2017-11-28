@@ -26,7 +26,9 @@
 	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>voip</string>
 		<string>audio</string>
+		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

@@ -7,12 +7,27 @@
 //
 
 #import "LPDAppDelegate.h"
+#import <CoreTelephony/CTCallCenter.h>
+#import <CoreTelephony/CTCall.h>
+#import <LPDSoundServiceKit/LPDSoundServiceKit.h>
+
+@interface LPDAppDelegate ()
+
+@property(nonatomic,strong)CTCallCenter *callCenter;
+
+@end
 
 @implementation LPDAppDelegate
+
+void (^block)(CTCall*) = ^(CTCall* call) { NSLog(@"%@", call.callState); };
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+
+    _callCenter = [[CTCallCenter alloc] init];
+    _callCenter.callEventHandler = block;
+    
     return YES;
 }
 

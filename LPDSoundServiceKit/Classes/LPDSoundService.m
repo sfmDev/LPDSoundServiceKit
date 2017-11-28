@@ -135,20 +135,22 @@
 
 //播放完成回调
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
-    if (flag && self.audioPlayer == player) {
-        [self.audioPlayer stop];
-        self.audioPlayer = nil;
-        [[AVAudioSession sharedInstance] setActive:NO
-                                       withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
-                                             error:nil];
-        if (self.isPlaying) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (flag && self.audioPlayer == player) {
+            [self.audioPlayer stop];
+            self.audioPlayer = nil;
+            [[AVAudioSession sharedInstance] setActive:NO
+                                           withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                                                 error:nil];
+            if (self.isPlaying) {
+                self.isPlaying = NO;
+                [self playCacheSound];
+            }
+        } else {
+            // log
             self.isPlaying = NO;
-            [self playCacheSound];
         }
-    } else {
-        // log
-        self.isPlaying = NO;
-    }
+    });
 }
 
 - (void)openShake:(BOOL)canshake {

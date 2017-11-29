@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "LPDSoundService.h"
 #import "LPDVolumeManager.h"
+#import "LPDTeleponyManager.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface LPDSoundItem : NSObject
@@ -50,18 +51,40 @@
     if (self) {
         self.cacheSounds = [NSMutableArray array];
         self.canShake = YES;
-        self.needCache = NO;
+        self.needCache = YES;
         [self setupNotifications];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playCacheSoundWhenApplicationDidBecomeActive)
+                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
 
 - (void)playSoundWithName:(NSString *)soundName ofType:(NSString*)type {
+    if ([[LPDTeleponyManager sharedInstance] isConnected]) {
+        [self shakeWhenPlaying];
+        if (self.needCache == YES) {
+            self.cacheSoundType = type;
+            [self.cacheSounds addObject:soundName];
+            return;
+        }
+    }
+    if (self.isPlaying == YES) {
+        if (self.needCache == YES) {
+            self.cacheSoundType = type;
+            [self.cacheSounds addObject:soundName];
+        }
+        return;
+    }
+    if (self.needCache == YES) {
+        self.isPlaying = YES;
+    }
+
     //让app支持接受远程控制事件
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
     AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayback withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
     [self setOutputWith:session];
     [session setActive:YES error:nil];
 
@@ -103,21 +126,31 @@
     }
 }
 
+//回到前台以后检查时候需要播放缓存
+- (void)playCacheSoundWhenApplicationDidBecomeActive {
+    if (![[LPDTeleponyManager sharedInstance] isConnected]) {
+        [[LPDSoundService sharedInstance] playCacheSound];
+    }
+}
+
 //播放完成回调
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
-    if (flag && self.audioPlayer == player) {
-        [self.audioPlayer stop];
-        self.audioPlayer = nil;
-        [[AVAudioSession sharedInstance] setActive:NO
-                                       withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
-                                             error:nil];
-        if (self.isPlaying) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (flag && self.audioPlayer == player) {
+            [self.audioPlayer stop];
+            self.audioPlayer = nil;
+            [[AVAudioSession sharedInstance] setActive:NO
+                                           withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                                                 error:nil];
+            if (self.isPlaying) {
+                self.isPlaying = NO;
+                [self playCacheSound];
+            }
+        } else {
+            // log
             self.isPlaying = NO;
-            [self playCacheSound];
         }
-    } else {
-        // log
-    }
+    });
 }
 
 - (void)openShake:(BOOL)canshake {
@@ -132,7 +165,7 @@
     self.isPlaying = NO;
     NSArray *cache = [NSArray arrayWithArray: self.cacheSounds];
     for (NSString *soundName in cache) {
-        [self.cacheSounds removeObject:soundName];
+        [self.cacheSounds removeObjectAtIndex: 0];
         [self playSoundWithName:soundName ofType:self.cacheSoundType];
     }
 }

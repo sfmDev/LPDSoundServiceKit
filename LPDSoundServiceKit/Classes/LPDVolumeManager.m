@@ -54,28 +54,26 @@
 
 - (void)audioRouteChangeListenerCallback:(NSNotification*)notification{
     // 插拔耳机是暂停播放0.1s
-    [[[LPDSoundService sharedInstance] audioPlayer] pause];
-    NSDictionary *interuptionDict = notification.userInfo;
-    NSInteger routeChangeReason = [[interuptionDict valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
-    [[LPDSoundService sharedInstance] setAudioPlayerVolume];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[[LPDSoundService sharedInstance] audioPlayer] play];
-    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[[LPDSoundService sharedInstance] audioPlayer] pause];
+        NSDictionary *interuptionDict = notification.userInfo;
+        NSInteger routeChangeReason = [[interuptionDict valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
+        [[LPDSoundService sharedInstance] setAudioPlayerVolume];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[[LPDSoundService sharedInstance] audioPlayer] play];
+        });
 
-    switch (routeChangeReason) {
-        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
-            dispatch_async(dispatch_get_main_queue(), ^{
+        switch (routeChangeReason) {
+            case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
                 [LPDToastView show:@"进入耳机模式"];
-            });
-            break;
-        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
-            dispatch_async(dispatch_get_main_queue(), ^{
+                break;
+            case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
                 [LPDToastView show:@"退出耳机模式"];
-            });
-            break;
-        default:
-            break;
-    }
+                break;
+            default:
+                break;
+        }
+    });
 }
 
 - (BOOL)isHeadsetPluggedIn {

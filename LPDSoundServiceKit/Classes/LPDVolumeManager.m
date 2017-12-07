@@ -50,6 +50,7 @@
 - (void)setAudioChangeNotification{
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:) name:AVAudioSessionRouteChangeNotification object:nil];
+    self.volumeValue = [self getCurrentVolume];
 }
 
 - (void)audioRouteChangeListenerCallback:(NSNotification*)notification{
@@ -150,8 +151,8 @@
     if (!self.slider) {
         [self generateMPVolumeSlider];
     }
-    if (_volumeValue == 0) {
-         return [self getCurrentVolume];
+    if (!_volumeValue || _volumeValue == 0) {
+        return [self getCurrentVolume];
     } else {
         return self.slider.value;
     }
@@ -169,4 +170,3 @@
 }
 
 @end
-

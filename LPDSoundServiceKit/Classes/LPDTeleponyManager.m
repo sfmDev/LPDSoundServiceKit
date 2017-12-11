@@ -7,8 +7,6 @@
 //
 
 #import "LPDTeleponyManager.h"
-#import <CoreTelephony/CTCallCenter.h>
-#import <CoreTelephony/CTCall.h>
 #import <CallKit/CXCallObserver.h>
 #import <CallKit/CXCall.h>
 
@@ -17,7 +15,7 @@
 @interface LPDTeleponyManager() <CXCallObserverDelegate>
 
 @property (nonatomic, strong) CXCallObserver *cXCallObserver;
-@property (nonatomic, strong) CTCallCenter *callCenter;
+
 @property (nonatomic, assign) BOOL currentCallState;
 
 @end
@@ -33,21 +31,40 @@
     return instance;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        if (CurrentSystemVersion >= 10.0) {
-            _cXCallObserver = [[CXCallObserver alloc] init];
-            [_cXCallObserver setDelegate:self queue:nil];
-        } else {
-            _callCenter = [[CTCallCenter alloc] init];
-        }
+- (void)scanPhoneCallState {
+    if (CurrentSystemVersion >= 10.0) {
+        _cXCallObserver = [[CXCallObserver alloc] init];
+        [_cXCallObserver setDelegate:self queue:nil];
+    } else {
+        _callCenter = [[CTCallCenter alloc] init];
+        __weak typeof(self) weakSelf = self;
+        _callCenter.callEventHandler = ^(CTCall* call) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if([call.callState isEqualToString: CTCallStateDisconnected]){
+                NSLog(@"Call has been disconnected");
+                strongSelf.currentCallState = NO;
+            } else if([call.callState isEqualToString: CTCallStateConnected]) {
+                NSLog(@"Callhasjustbeen connected");
+                strongSelf.currentCallState = YES;
+            } else if([call.callState isEqualToString:CTCallStateIncoming]) {
+                NSLog(@"Call is incoming");
+                strongSelf.currentCallState = YES;
+            } else if([call.callState isEqualToString:CTCallStateDialing]) {
+                NSLog(@"Call is Dialing");
+                strongSelf.currentCallState = YES;
+            }
+        };
     }
-    return self;
 }
 
 - (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call {
     if ([call hasConnected]) {
+        self.currentCallState = YES;
+    }
+    if ([call isOnHold]) {
+        self.currentCallState = YES;
+    }
+    if ([call isOutgoing]) {
         self.currentCallState = YES;
     }
     if ([call hasEnded]) {
@@ -56,11 +73,7 @@
 }
 
 - (BOOL)isConnected {
-    if (CurrentSystemVersion >= 10.0) {
-        return self.currentCallState;
-    } else {
-        return self.callCenter.currentCalls.count != 0;
-    }
+    return self.currentCallState;
 }
 
 @end

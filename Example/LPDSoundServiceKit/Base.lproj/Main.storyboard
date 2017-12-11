@@ -28,11 +28,22 @@
                                     <action selector="playSoundTapped:" destination="whP-gf-Uak" eventType="touchUpInside" id="Dnu-9Q-ZTO"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oQQ-DV-PV5">
+                                <rect key="frame" x="156" y="356" width="62" height="30"/>
+                                <state key="normal" title="拨打电话"/>
+                                <connections>
+                                    <action selector="phoneCallTapped:" destination="whP-gf-Uak" eventType="touchUpInside" id="MdM-3U-g7o"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="oQQ-DV-PV5" firstAttribute="centerX" secondItem="S85-Mv-af5" secondAttribute="centerX" id="AI7-s7-qrA"/>
                             <constraint firstItem="S85-Mv-af5" firstAttribute="centerX" secondItem="TpU-gO-2f1" secondAttribute="centerX" id="JcD-GK-Qax"/>
+                            <constraint firstItem="oQQ-DV-PV5" firstAttribute="height" secondItem="S85-Mv-af5" secondAttribute="height" id="OH4-uA-4ee"/>
                             <constraint firstItem="S85-Mv-af5" firstAttribute="centerY" secondItem="TpU-gO-2f1" secondAttribute="centerY" id="VxF-rc-bgH"/>
+                            <constraint firstItem="oQQ-DV-PV5" firstAttribute="top" secondItem="S85-Mv-af5" secondAttribute="bottom" constant="7.5" id="c0v-FF-pke"/>
+                            <constraint firstItem="oQQ-DV-PV5" firstAttribute="width" secondItem="S85-Mv-af5" secondAttribute="width" id="opI-Mh-leh"/>
                         </constraints>
                     </view>
                 </viewController>

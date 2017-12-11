@@ -7,10 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreTelephony/CTCallCenter.h>
+#import <CoreTelephony/CTCall.h>
 
 @interface LPDTeleponyManager : NSObject
 
+@property (nonatomic, strong) CTCallCenter *callCenter;
+
 + (instancetype)sharedInstance;
+
+- (void)scanPhoneCallState;
 
 - (BOOL)isConnected;
 

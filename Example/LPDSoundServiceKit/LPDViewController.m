@@ -19,12 +19,15 @@
 {
     [super viewDidLoad];
 
-
-
+    [[LPDTeleponyManager sharedInstance] scanPhoneCallState];
 }
 
 - (IBAction)playSoundTapped:(UIButton *)sender {
     [[LPDSoundService sharedInstance] playSoundWithName:@"remind_work" ofType:@"aiff"];
+}
+
+- (IBAction)phoneCallTapped:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://+8613966012130"]]];
 }
 
 - (void)didReceiveMemoryWarning

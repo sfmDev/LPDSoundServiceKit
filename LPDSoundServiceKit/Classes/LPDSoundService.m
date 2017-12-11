@@ -13,17 +13,6 @@
 #import "LPDTeleponyManager.h"
 #import <AudioToolbox/AudioToolbox.h>
 
-@interface LPDSoundItem : NSObject
-
-@property (nonatomic, assign) NSTimeInterval latestPlay;
-@property (nonatomic, assign) SystemSoundID soundId;
-
-@end
-
-@implementation LPDSoundItem
-
-@end
-
 @interface LPDSoundService () <AVAudioPlayerDelegate>
 
 @property (nonatomic, strong) NSMutableDictionary *dictionaryOfSoundNameId;

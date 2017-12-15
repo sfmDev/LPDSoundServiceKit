@@ -128,6 +128,7 @@
         if (flag && self.audioPlayer == player) {
             [self.audioPlayer stop];
             self.audioPlayer = nil;
+            NSLog(@"sound finish");
             [[AVAudioSession sharedInstance] setActive:NO
                                            withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
                                                  error:nil];
@@ -136,7 +137,6 @@
                 [self playCacheSound];
             }
         } else {
-            // log
             self.isPlaying = NO;
         }
     });

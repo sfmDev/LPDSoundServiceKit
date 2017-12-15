@@ -31,12 +31,23 @@
     return instance;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        if (CurrentSystemVersion >= 10.0) {
+            _cXCallObserver = [[CXCallObserver alloc] init];
+            [_cXCallObserver setDelegate:self queue:nil];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _callCenter = [[CTCallCenter alloc] init];
+            });
+        }
+    }
+    return self;
+}
+
 - (void)scanPhoneCallState {
-    if (CurrentSystemVersion >= 10.0) {
-        _cXCallObserver = [[CXCallObserver alloc] init];
-        [_cXCallObserver setDelegate:self queue:nil];
-    } else {
-        _callCenter = [[CTCallCenter alloc] init];
+    if (CurrentSystemVersion < 10.0) {
         __weak typeof(self) weakSelf = self;
         _callCenter.callEventHandler = ^(CTCall* call) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -44,7 +55,7 @@
                 NSLog(@"Call has been disconnected");
                 strongSelf.currentCallState = NO;
             } else if([call.callState isEqualToString: CTCallStateConnected]) {
-                NSLog(@"Callhasjustbeen connected");
+                NSLog(@"Call has just been connected");
                 strongSelf.currentCallState = YES;
             } else if([call.callState isEqualToString:CTCallStateIncoming]) {
                 NSLog(@"Call is incoming");

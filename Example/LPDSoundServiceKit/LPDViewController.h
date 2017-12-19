@@ -7,11 +7,7 @@
 //
 
 @import UIKit;
-#import <CoreTelephony/CTCallCenter.h>
-#import <CoreTelephony/CTCall.h>
 
 @interface LPDViewController : UIViewController
-
-@property(nonatomic,strong)CTCallCenter *callCenter; //必须在这里声明，要不不会回调block
 
 @end

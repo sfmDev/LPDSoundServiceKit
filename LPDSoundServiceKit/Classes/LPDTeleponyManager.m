@@ -12,11 +12,15 @@
 
 #define CurrentSystemVersion ([[[UIDevice currentDevice] systemVersion] floatValue])
 
-@interface LPDTeleponyManager() <CXCallObserverDelegate>
+@interface LPDTeleponyManager()
+
+/*
+<CXCallObserverDelegate>
 
 @property (nonatomic, strong) CXCallObserver *cXCallObserver;
 
 @property (nonatomic, assign) BOOL currentCallState;
+ */
 
 @end
 
@@ -31,6 +35,7 @@
     return instance;
 }
 
+/*
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -82,9 +87,10 @@
         self.currentCallState = NO;
     }
 }
+*/
 
 - (BOOL)isConnected {
-    return self.currentCallState;
+    return NO;
 }
 
 @end

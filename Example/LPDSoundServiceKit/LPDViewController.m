@@ -18,8 +18,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    [[LPDTeleponyManager sharedInstance] scanPhoneCallState];
 }
 
 - (IBAction)playSoundTapped:(UIButton *)sender {

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'LPDSoundServiceKit'
-  s.version          = '0.4.1'
+  s.version          = '0.4.2'
   s.summary          = 'A manager of AVAudiosession for play sound.'
 
 # This description is used to generate tags and improve search results.
@@ -36,6 +36,7 @@ TODO: Add long description of the pod here.
   #   'LPDSoundServiceKit' => ['LPDSoundServiceKit/Assets/*.png']
   # }
 
-  s.frameworks = 'UIKit', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'CoreTelephony', 'CallKit'
+  s.frameworks = 'UIKit', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'CoreTelephony'
+  s.weak_framework = 'CallKit'
   s.dependency 'LPDControlsKit'
 end

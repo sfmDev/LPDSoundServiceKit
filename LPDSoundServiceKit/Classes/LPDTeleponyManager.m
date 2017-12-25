@@ -15,7 +15,6 @@
 @interface LPDTeleponyManager() <CXCallObserverDelegate>
 
 @property (nonatomic, strong) CXCallObserver *cXCallObserver;
-
 @property (nonatomic, assign) BOOL currentCallState;
 
 @end
@@ -39,7 +38,7 @@
             [_cXCallObserver setDelegate:self queue:nil];
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                _callCenter = [[CTCallCenter alloc] init];
+                callCenter = [[CTCallCenter alloc] init];
             });
         }
     }
@@ -49,7 +48,7 @@
 - (void)scanPhoneCallState {
     if (CurrentSystemVersion < 10.0) {
         __weak typeof(self) weakSelf = self;
-        _callCenter.callEventHandler = ^(CTCall* call) {
+        callCenter.callEventHandler = ^(CTCall* call) {
             __strong typeof(weakSelf) strongSelf = weakSelf;
             if([call.callState isEqualToString: CTCallStateDisconnected]){
                 NSLog(@"Call has been disconnected");

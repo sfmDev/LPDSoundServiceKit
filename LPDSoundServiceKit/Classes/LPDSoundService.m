@@ -38,6 +38,9 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+
         self.cacheSounds = [NSMutableArray array];
         self.canShake = YES;
         self.needCache = YES;
@@ -72,10 +75,8 @@
     //让app支持接受远程控制事件
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
-    [self setOutputWith:session];
-    [session setActive:YES error:nil];
+    [self setOutputWith: [AVAudioSession sharedInstance]];
+    [[AVAudioSession sharedInstance] setActive:YES error:nil];
 
     NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:soundName ofType:type]];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];

@@ -10,9 +10,9 @@
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
 
-@interface LPDTeleponyManager : NSObject
+static CTCallCenter *callCenter;
 
-@property (nonatomic, strong) CTCallCenter *callCenter;
+@interface LPDTeleponyManager : NSObject
 
 + (instancetype)sharedInstance;
 

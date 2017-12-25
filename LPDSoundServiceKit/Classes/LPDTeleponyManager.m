@@ -37,9 +37,7 @@
             _cXCallObserver = [[CXCallObserver alloc] init];
             [_cXCallObserver setDelegate:self queue:nil];
         } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                callCenter = [[CTCallCenter alloc] init];
-            });
+            callCenter = [[CTCallCenter alloc] init];
         }
     }
     return self;

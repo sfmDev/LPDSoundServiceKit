@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) CXCallObserver *cXCallObserver;
 @property (nonatomic, assign) BOOL currentCallState;
+@property (nonatomic, strong) dispatch_queue_t phoneCallQueue;
 
 @end
 
@@ -35,7 +36,8 @@
     if (self) {
         if (CurrentSystemVersion >= 10.0) {
             _cXCallObserver = [[CXCallObserver alloc] init];
-            [_cXCallObserver setDelegate:self queue:nil];
+            _phoneCallQueue = dispatch_queue_create("LPDPhoneCallObserverQueue", DISPATCH_QUEUE_SERIAL);
+            [_cXCallObserver setDelegate:self queue:_phoneCallQueue];
         } else {
             callCenter = [[CTCallCenter alloc] init];
         }

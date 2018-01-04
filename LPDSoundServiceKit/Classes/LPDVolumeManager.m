@@ -49,7 +49,7 @@
 
 - (void)setAudioChangeNotification{
     [[AVAudioSession sharedInstance] setActive:YES error:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:) name:AVAudioSessionRouteChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioRouteChangeListenerCallback:) name:AVAudioSessionRouteChangeNotification object:[AVAudioSession sharedInstance]];
     self.volumeValue = [self getCurrentVolume];
 }
 

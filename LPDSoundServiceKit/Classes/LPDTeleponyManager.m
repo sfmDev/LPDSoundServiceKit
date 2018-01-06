@@ -38,33 +38,9 @@
             _cXCallObserver = [[CXCallObserver alloc] init];
             _phoneCallQueue = dispatch_queue_create("LPDPhoneCallObserverQueue", DISPATCH_QUEUE_SERIAL);
             [_cXCallObserver setDelegate:self queue:_phoneCallQueue];
-        } else {
-            callCenter = [[CTCallCenter alloc] init];
         }
     }
     return self;
-}
-
-- (void)scanPhoneCallState {
-    if (CurrentSystemVersion < 10.0) {
-        __weak typeof(self) weakSelf = self;
-        callCenter.callEventHandler = ^(CTCall* call) {
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if([call.callState isEqualToString: CTCallStateDisconnected]){
-                NSLog(@"Call has been disconnected");
-                strongSelf.currentCallState = NO;
-            } else if([call.callState isEqualToString: CTCallStateConnected]) {
-                NSLog(@"Call has just been connected");
-                strongSelf.currentCallState = YES;
-            } else if([call.callState isEqualToString:CTCallStateIncoming]) {
-                NSLog(@"Call is incoming");
-                strongSelf.currentCallState = YES;
-            } else if([call.callState isEqualToString:CTCallStateDialing]) {
-                NSLog(@"Call is Dialing");
-                strongSelf.currentCallState = YES;
-            }
-        };
-    }
 }
 
 - (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call {
@@ -83,7 +59,11 @@
 }
 
 - (BOOL)isConnected {
-    return self.currentCallState;
+    if (CurrentSystemVersion >= 10.0) {
+        return self.currentCallState;
+    } else {
+        return NO;
+    }
 }
 
 @end

@@ -38,6 +38,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        [LPDTeleponyManager sharedInstance];
         AVAudioSession *session = [AVAudioSession sharedInstance];
         [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
 

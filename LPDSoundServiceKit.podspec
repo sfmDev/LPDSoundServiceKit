@@ -36,6 +36,6 @@ TODO: Add long description of the pod here.
   #   'LPDSoundServiceKit' => ['LPDSoundServiceKit/Assets/*.png']
   # }
 
-  s.frameworks = 'UIKit', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'CoreTelephony', 'CallKit'
+  s.frameworks = 'UIKit', 'AudioToolbox', 'AVFoundation', 'MediaPlayer', 'CallKit'
   s.dependency 'LPDControlsKit'
 end

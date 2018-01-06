@@ -8,7 +8,6 @@
 
 #import "LPDTeleponyManager.h"
 #import <CallKit/CXCallObserver.h>
-#import <CallKit/CXCall.h>
 
 #define CurrentSystemVersion ([[[UIDevice currentDevice] systemVersion] floatValue])
 

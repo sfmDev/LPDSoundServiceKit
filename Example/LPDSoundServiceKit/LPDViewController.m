@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[LPDSoundService sharedInstance] setupNotifications];
 }
 
 - (IBAction)playSoundTapped:(UIButton *)sender {

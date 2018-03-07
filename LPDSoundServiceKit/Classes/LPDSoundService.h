@@ -17,12 +17,6 @@
 @property (nonatomic, assign) BOOL canShake;
 
 /**
- *  @brief add interrupted notification 
- */
-
-- (void)setupNotifications;
-
-/**
  *  @brief play sound with file name. e.m sound.aiff
  */
 

@@ -40,58 +40,37 @@
     self = [super init];
     if (self) {
         AVAudioSession *session = [AVAudioSession sharedInstance];
-        [session setCategory:AVAudioSessionCategoryPlayback withOptions: AVAudioSessionCategoryOptionDefaultToSpeaker | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+        [session setCategory:AVAudioSessionCategoryPlayback withOptions: AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
 
         self.cacheSounds = [NSMutableArray array];
         self.canShake = YES;
         self.needCache = YES;
-        [self setupNotifications];
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(playCacheSoundWhenApplicationDidBecomeActive)
-//                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playCacheSoundWhenApplicationDidBecomeActive)
+                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(interrupted:)
+                                                     name:AVAudioSessionInterruptionNotification
+                                                   object: [AVAudioSession sharedInstance]];
     }
     return self;
 }
 
 - (void)playSoundWithName:(NSString *)soundName ofType:(NSString*)type {
-//    if ([[LPDTeleponyManager sharedInstance] isConnected]) {
-//        [self shakeWhenPlaying];
-//        if (self.needCache == YES) {
-//            self.cacheSoundType = type;
-//            [self.cacheSounds addObject:soundName];
-//            return;
-//        }
-//    }
-//    if (self.isPlaying == YES) {
-//        if (self.needCache == YES) {
-//            self.cacheSoundType = type;
-//            [self.cacheSounds addObject:soundName];
-//        }
-//        return;
-//    }
-//    if (self.needCache == YES) {
-//        self.isPlaying = YES;
-//    }
-    if (self.isInterrupt) {
+    if ([[LPDTeleponyManager sharedInstance] isConnected]) {
         [self shakeWhenPlaying];
         if (self.needCache == YES) {
             self.cacheSoundType = type;
             [self.cacheSounds addObject:soundName];
             return;
-        } else {
-            return;
         }
     }
-
     if (self.isPlaying == YES) {
         if (self.needCache == YES) {
             self.cacheSoundType = type;
             [self.cacheSounds addObject:soundName];
         }
         return;
-    }
-    if (self.needCache == YES) {
-        self.isPlaying = YES;
     }
 
     //让app支持接受远程控制事件
@@ -192,13 +171,6 @@
     }
 }
 
-- (void)setupNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(interrupted:)
-                                                 name:AVAudioSessionInterruptionNotification
-                                               object: [AVAudioSession sharedInstance]];
-}
-
 -(void)interrupted:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
     if (!userInfo) { return; }
@@ -220,27 +192,6 @@
             });
         }
     }
-    if ([userInfo objectForKey:AVAudioSessionInterruptionWasSuspendedKey]) {
-
-    }
-
-//        if ([[userInfo objectForKey:AVAudioSessionSilenceSecondaryAudioHintTypeKey] isKindOfClass:[NSNumber class]]) {
-//            AVAudioSessionSilenceSecondaryAudioHintType typeValue = [[userInfo objectForKey:AVAudioSessionSilenceSecondaryAudioHintTypeKey] integerValue];
-//            if (typeValue == AVAudioSessionSilenceSecondaryAudioHintTypeBegin) {
-//                self.isInterrupt = YES;
-//                if([self.audioPlayer isPlaying]) {
-//                    [self.audioPlayer pause];
-//                }
-//            } else {
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                    NSLog(@"playing");
-//                    self.isInterrupt = NO;
-//                    if (![self.audioPlayer isPlaying]) {
-//                        [self.audioPlayer play];
-//                    }
-//                });
-//            }
-//        }
 }
 
 - (void)dealloc{

@@ -21,6 +21,7 @@
 @property (nonatomic, strong) NSMutableArray<NSString *> *cacheSounds;
 @property (nonatomic, assign) BOOL isPlaying;
 @property (nonatomic, assign) BOOL needCache;
+@property (nonatomic, assign) BOOL isInterrupt;
 
 @end
 
@@ -38,17 +39,19 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [LPDTeleponyManager sharedInstance];
         AVAudioSession *session = [AVAudioSession sharedInstance];
-        [session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+        [session setCategory:AVAudioSessionCategoryPlayback withOptions: AVAudioSessionCategoryOptionDuckOthers | AVAudioSessionCategoryOptionAllowBluetooth error:nil];
 
         self.cacheSounds = [NSMutableArray array];
         self.canShake = YES;
         self.needCache = YES;
-        [self setupNotifications];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playCacheSoundWhenApplicationDidBecomeActive)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(interrupted:)
+                                                     name:AVAudioSessionInterruptionNotification
+                                                   object: [AVAudioSession sharedInstance]];
     }
     return self;
 }
@@ -69,15 +72,12 @@
         }
         return;
     }
-    if (self.needCache == YES) {
-        self.isPlaying = YES;
-    }
 
     //让app支持接受远程控制事件
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
     [self setOutputWith: [AVAudioSession sharedInstance]];
-    [[AVAudioSession sharedInstance] setActive:YES error:nil];
+    [[AVAudioSession sharedInstance]setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
 
     NSURL *fileURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:soundName ofType:type]];
     self.audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
@@ -131,9 +131,12 @@
             [self.audioPlayer stop];
             self.audioPlayer = nil;
             NSLog(@"sound finish");
+            NSError *error;
             [[AVAudioSession sharedInstance] setActive:NO
-                                           withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
-                                                 error:nil];
+                                                 error:&error];
+            if (error) {
+                NSLog(@"%@",error.localizedDescription);
+            }
             if (self.isPlaying) {
                 self.isPlaying = NO;
                 [self playCacheSound];
@@ -168,27 +171,25 @@
     }
 }
 
-- (void)setupNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(interrupted:)
-                                                 name:AVAudioSessionInterruptionNotification
-                                               object: [AVAudioSession sharedInstance]];
-}
-
 -(void)interrupted:(NSNotification *)notification {
     NSDictionary *userInfo = notification.userInfo;
-    if (userInfo.count > 0) {
-        if ([[userInfo objectForKey:AVAudioSessionSilenceSecondaryAudioHintTypeKey] isKindOfClass:[NSNumber class]]) {
-            AVAudioSessionSilenceSecondaryAudioHintType typeValue = [[userInfo objectForKey:AVAudioSessionSilenceSecondaryAudioHintTypeKey] integerValue];
-            if (typeValue == AVAudioSessionSilenceSecondaryAudioHintTypeBegin) {
-                if([self.audioPlayer isPlaying]) {
-                    [self.audioPlayer pause];
-                }
-            } else {
+    if (!userInfo) { return; }
+
+    if ([[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] isKindOfClass:[NSNumber class]]) {
+        AVAudioSessionInterruptionType typeValue = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] integerValue];
+        if (typeValue == AVAudioSessionInterruptionTypeBegan) {
+            self.isInterrupt = YES;
+            if([self.audioPlayer isPlaying]) {
+                [self.audioPlayer pause];
+            }
+        } else {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.01 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                NSLog(@"playing");
                 if (![self.audioPlayer isPlaying]) {
                     [self.audioPlayer play];
                 }
-            }
+                self.isInterrupt = NO;
+            });
         }
     }
 }
